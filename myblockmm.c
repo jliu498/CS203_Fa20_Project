@@ -60,11 +60,12 @@ void *mythreaded_vector_blockmm(void *t)
   double **c = tinfo.c;
   int ARRAY_SIZE = tinfo.array_size;
   int n = tinfo.n;
+  type b_t[ARRAY_SIZE][ARRAY_SIZE];
   for(i = (ARRAY_SIZE/number_of_threads)*(tid); i < (ARRAY_SIZE/number_of_threads)*(tid+1); i+=ARRAY_SIZE/n)
   {
     for(j = 0; j < ARRAY_SIZE; j+=(ARRAY_SIZE/n))
     {
-        b[i][j]+=b[j][i];
+        b_t[i][j]+=b[j][i];
     }
   }
   for(i = (ARRAY_SIZE/number_of_threads)*(tid); i < (ARRAY_SIZE/number_of_threads)*(tid+1); i+=ARRAY_SIZE/n)
@@ -82,7 +83,7 @@ void *mythreaded_vector_blockmm(void *t)
                 for(kk = k; kk < k+(ARRAY_SIZE/n); kk++)
                 {
                         va = _mm256_broadcast_sd(&a[ii][kk]);
-                        vb = _mm256_load_pd(&b[jj][kk]);
+                        vb = _mm256_load_pd(&b_t[jj][kk]);
                         vc = _mm256_add_pd(vc,_mm256_mul_pd(va,vb));
                  }
                      _mm256_store_pd(&c[ii][jj],vc);
