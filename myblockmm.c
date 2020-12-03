@@ -72,12 +72,30 @@ void *mythreaded_vector_blockmm(void *t)
             {
                     vc = _mm256_load_pd(&c[ii][jj]);
                     
-                for(kk = k; kk < k+(ARRAY_SIZE/n); kk++)
-                {
-                        va = _mm256_broadcast_sd(&a[ii][kk]);
-                        vb = _mm256_load_pd(&b[kk][jj]);
-                        vc = _mm256_add_pd(vc,_mm256_mul_pd(va,vb));
-                 }
+               va = _mm256_broadcast_sd(&a[ii][kk]);
+        vb = _mm256_load_pd(&b[kk][jj]);
+        vc = _mm256_add_pd(vc,_mm256_mul_pd(va,vb));
+        va = _mm256_broadcast_sd(&a[ii][kk]);
+        vb = _mm256_load_pd(&b[kk][jj]);
+        vc = _mm256_add_pd(vc,_mm256_mul_pd(va,vb));
+        va = _mm256_broadcast_sd(&a[ii][kk]);
+        vb = _mm256_load_pd(&b[kk][jj]);
+        vc = _mm256_add_pd(vc,_mm256_mul_pd(va,vb));
+        va = _mm256_broadcast_sd(&a[ii][kk]);
+        vb = _mm256_load_pd(&b[kk][jj]);
+        vc = _mm256_add_pd(vc,_mm256_mul_pd(va,vb));
+        va = _mm256_broadcast_sd(&a[ii][kk]);
+        vb = _mm256_load_pd(&b[kk][jj]);
+        vc = _mm256_add_pd(vc,_mm256_mul_pd(va,vb));
+        va = _mm256_broadcast_sd(&a[ii][kk]);
+        vb = _mm256_load_pd(&b[kk][jj]);
+        vc = _mm256_add_pd(vc,_mm256_mul_pd(va,vb));
+        va = _mm256_broadcast_sd(&a[ii][kk]);
+        vb = _mm256_load_pd(&b[kk][jj]);
+        vc = _mm256_add_pd(vc,_mm256_mul_pd(va,vb));
+        va = _mm256_broadcast_sd(&a[ii][kk]);
+        vb = _mm256_load_pd(&b[kk][jj]);
+        vc = _mm256_add_pd(vc,_mm256_mul_pd(va,vb));
                      _mm256_store_pd(&c[ii][jj],vc);
             }
           }
