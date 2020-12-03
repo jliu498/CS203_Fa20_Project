@@ -65,7 +65,7 @@ void *mythreaded_vector_blockmm(void *t)
   {
     for(j = 0; j < ARRAY_SIZE; j+=(ARRAY_SIZE/n))
     {
-        b_t[i][j]=b[j][i];
+        b_t[i][j]+=b[j][i];
     }
   }
   for(i = (ARRAY_SIZE/number_of_threads)*(tid); i < (ARRAY_SIZE/number_of_threads)*(tid+1); i+=ARRAY_SIZE/n)
