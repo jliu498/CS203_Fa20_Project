@@ -60,7 +60,7 @@ void *mythreaded_vector_blockmm(void *t)
   double **c = tinfo.c;
   int ARRAY_SIZE = tinfo.array_size;
   int n = tinfo.n;
-  double **b_t = tinfo.b;
+  type b_t [5005][5005];
   for(i = 0; i<5004;i++)
   {
     for(j = 0; j < 5004; j++)
