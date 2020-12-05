@@ -61,11 +61,11 @@ void *mythreaded_vector_blockmm(void *t)
   int ARRAY_SIZE = tinfo.array_size;
   int n = tinfo.n;
   double **b_t = tinfo.b;
-  for(i = (ARRAY_SIZE/number_of_threads)*(tid); i < (ARRAY_SIZE/number_of_threads)*(tid+1); i+=ARRAY_SIZE/n)
+  for(i = 0; i<5004;i++)
   {
-    for(j = 0; j < ARRAY_SIZE; j+=(ARRAY_SIZE/n))
+    for(j = 0; j < 5004; j++)
     {
-        b_t[i][j]+=b[j][i];
+        b_t[i][j]=b[j][i];
     }
   }
   for(i = (ARRAY_SIZE/number_of_threads)*(tid); i < (ARRAY_SIZE/number_of_threads)*(tid+1); i+=ARRAY_SIZE/n)
