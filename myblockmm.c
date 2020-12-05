@@ -60,10 +60,10 @@ void *mythreaded_vector_blockmm(void *t)
   double **c = tinfo.c;
   int ARRAY_SIZE = tinfo.array_size;
   int n = tinfo.n;
-  double **b_t=tinfo.b;
-  for(i = 0; i<tinfo.b;i++)
+  double b_t[ARRAY_SIZE][ARRAY_SIZE];
+  for(i = 0; i<ARRAY_SIZE;i++)
   {
-    for(j = 0; j < tinfo.b; j++)
+    for(j = 0; j < ARRAY_SIZE; j++)
     {
         b_t[i][j]=b[j][i];
     }
