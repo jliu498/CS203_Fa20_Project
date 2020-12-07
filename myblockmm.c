@@ -5,6 +5,7 @@
 #include <x86intrin.h>
 #include <sys/time.h>
 #include <pthread.h>
+#include "myblockmm.h"
 
 struct thread_info
 {
@@ -14,14 +15,18 @@ struct thread_info
     int number_of_threads;
     int n;
 };
+void *mythreaded_vector_blockmm(void *t);
 
-void *threaded_vector_blockmm(void *t);
-int baseline_threaded_vector_blockmm(double **a, double **b, double **c, int ARRAY_SIZE, int n, int number_of_threads)
+char name[128];
+char SID[128];
+#define VECTOR_WIDTH 4
+void my_threaded_vector_blockmm(double **a, double **b, double **c, int n, int ARRAY_SIZE, int number_of_threads)
 {
   int i=0;
   pthread_t *thread;
   struct thread_info *tinfo;
-
+  strcpy(name,"Jianqiao Liu");
+  strcpy(SID,"862188391");
   thread = (pthread_t *)malloc(sizeof(pthread_t)*number_of_threads);
   tinfo = (struct thread_info *)malloc(sizeof(struct thread_info)*number_of_threads);
 
@@ -34,16 +39,16 @@ int baseline_threaded_vector_blockmm(double **a, double **b, double **c, int ARR
     tinfo[i].number_of_threads = number_of_threads;
     tinfo[i].array_size = ARRAY_SIZE;
     tinfo[i].n = n;
-    pthread_create(&thread[i], NULL, threaded_vector_blockmm, &tinfo[i]);
+    pthread_create(&thread[i], NULL, mythreaded_vector_blockmm, &tinfo[i]);
   }  
   for(i = 0 ; i < number_of_threads ; i++)
     pthread_join(thread[i], NULL);
 
-  return 0;
+  return;
 }
 
 #define VECTOR_WIDTH 4
-void *threaded_vector_blockmm(void *t)
+void *mythreaded_vector_blockmm(void *t)
 {
   int i,j,k, ii, jj, kk, x;
   __m256d va, vb, vc;
@@ -54,8 +59,7 @@ void *threaded_vector_blockmm(void *t)
   double **b = tinfo.b;
   double **c = tinfo.c;
   int ARRAY_SIZE = tinfo.array_size;
-  int n = tinfo.n;
-  n=n/2;
+  int n = tinfo.n/2;
   for(i = (ARRAY_SIZE/number_of_threads)*(tid); i < (ARRAY_SIZE/number_of_threads)*(tid+1); i+=ARRAY_SIZE/n)
   {
     for(j = 0; j < ARRAY_SIZE; j+=(ARRAY_SIZE/n))
