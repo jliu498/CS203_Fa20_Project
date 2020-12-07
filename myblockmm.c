@@ -5,7 +5,6 @@
 #include <x86intrin.h>
 #include <sys/time.h>
 #include <pthread.h>
-#include "myblockmm.h"
 
 struct thread_info
 {
@@ -15,18 +14,14 @@ struct thread_info
     int number_of_threads;
     int n;
 };
-void *mythreaded_vector_blockmm(void *t);
 
-char name[128];
-char SID[128];
-#define VECTOR_WIDTH 4
-void my_threaded_vector_blockmm(double **a, double **b, double **c, int n, int ARRAY_SIZE, int number_of_threads)
+void *threaded_vector_blockmm(void *t);
+int baseline_threaded_vector_blockmm(double **a, double **b, double **c, int ARRAY_SIZE, int n, int number_of_threads)
 {
   int i=0;
   pthread_t *thread;
   struct thread_info *tinfo;
-  strcpy(name,"Please replace this with your name!");
-  strcpy(SID,"Please replace this with your SID!");
+
   thread = (pthread_t *)malloc(sizeof(pthread_t)*number_of_threads);
   tinfo = (struct thread_info *)malloc(sizeof(struct thread_info)*number_of_threads);
 
@@ -39,16 +34,16 @@ void my_threaded_vector_blockmm(double **a, double **b, double **c, int n, int A
     tinfo[i].number_of_threads = number_of_threads;
     tinfo[i].array_size = ARRAY_SIZE;
     tinfo[i].n = n;
-    pthread_create(&thread[i], NULL, mythreaded_vector_blockmm, &tinfo[i]);
+    pthread_create(&thread[i], NULL, threaded_vector_blockmm, &tinfo[i]);
   }  
   for(i = 0 ; i < number_of_threads ; i++)
     pthread_join(thread[i], NULL);
 
-  return;
+  return 0;
 }
 
 #define VECTOR_WIDTH 4
-void *mythreaded_vector_blockmm(void *t)
+void *threaded_vector_blockmm(void *t)
 {
   int i,j,k, ii, jj, kk, x;
   __m256d va, vb, vc;
@@ -60,14 +55,7 @@ void *mythreaded_vector_blockmm(void *t)
   double **c = tinfo.c;
   int ARRAY_SIZE = tinfo.array_size;
   int n = tinfo.n;
-  double b_t[ARRAY_SIZE][ARRAY_SIZE];
-  for(i = 0; i<ARRAY_SIZE;i++)
-  {
-    for(j = 0; j < ARRAY_SIZE; j++)
-    {
-        b_t[i][j]=b[j][i];
-    }
-  }
+  n=n/2;
   for(i = (ARRAY_SIZE/number_of_threads)*(tid); i < (ARRAY_SIZE/number_of_threads)*(tid+1); i+=ARRAY_SIZE/n)
   {
     for(j = 0; j < ARRAY_SIZE; j+=(ARRAY_SIZE/n))
@@ -78,20 +66,18 @@ void *mythreaded_vector_blockmm(void *t)
          {
             for(jj = j; jj < j+(ARRAY_SIZE/n); jj+=VECTOR_WIDTH)
             {
-                            vc = _mm256_load_pd(&c[ii][jj]);
+                    vc = _mm256_load_pd(&c[ii][jj]);
                     
                 for(kk = k; kk < k+(ARRAY_SIZE/n); kk++)
                 {
                         va = _mm256_broadcast_sd(&a[ii][kk]);
-                        vb = _mm256_load_pd(&b_t[jj][kk]);
+                        vb = _mm256_load_pd(&b[kk][jj]);
                         vc = _mm256_add_pd(vc,_mm256_mul_pd(va,vb));
                  }
                      _mm256_store_pd(&c[ii][jj],vc);
-
             }
           }
       }
     }
   }  
 }
-
