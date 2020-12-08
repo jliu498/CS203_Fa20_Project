@@ -73,8 +73,7 @@ void *mythreaded_vector_blockmm(void *t)
             {
                     vc = _mm256_load_pd(&c[ii][jj]);
                 
-                    _mm_prefetch((const char*)(&a[ii][k]),_MM_HINT_NTA);
-                    _mm_prefetch((const char*)(&b[k][jj]),_MM_HINT_NTA);
+                   
                 
                     
                 for(kk = k; kk < k+(ARRAY_SIZE/n); kk++)
